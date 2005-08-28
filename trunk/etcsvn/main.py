@@ -177,6 +177,15 @@ class EtcSvn(object):
 
     def get_config(self):
         cpath = os.path.join(self.workspace, 'etcsvn.conf')
+        if not os.path.isfile(cpath):
+            print "etcsvn.conf doesn't exist"
+            print 'creating blank etcsvn.conf'
+            cfile = file(cpath, 'w')
+            cfile.write('# EtcSvn generated blank configuration\n')
+            cfile.write('[main]\n')
+            cfile.write('files:\n\n')
+            cfile.close()
+            self.svn.add(cpath)
         self.cfg.read(cpath)
         
 

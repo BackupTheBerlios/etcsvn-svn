@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# by default create the repository
+# you may want to skip this step
+etcsvn create
+# checkout the workspace
+etcsvn setup
+
+# import the conffiles
+for conffile in `dpkg --get-selections | cut -f1 | xargs dlocate -conf | grep -v ^Package`;
+    do etcsvn import $conffile
+done
+
+# if a commit arg is passed, commit the files
+if [ -n $1 ] ; then
+    if [ "$1" = "commit" ] ; then
+	echo "going to commit this"
+	etcsvn commit
+    fi
+fi
