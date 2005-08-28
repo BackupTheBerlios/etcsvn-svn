@@ -53,6 +53,16 @@ There is should be a little work done on the repository layout.  It should be
 possible to place many systems in one repository, or have separate 
 repositories for clients, networks, etc.
 
+Etcsvn makes no attempt to authenticate to your repository.  This will probably
+not change anytime soon, because I feel that it should be the job of the script or
+administrator to handle this.
+
+Currently there needs to be a ini style config file in the root of your repository
+named "etcsvn.conf".  There is only one section used in this file currently, and it
+is called "main".  In the "main" section there is only one option supported, and it is
+called "files".  The "files" option is a list of absolute path files separated with
+newlines.
+
 ---------------------
 
 Dependencies
@@ -155,6 +165,24 @@ With these subcommands:
 
 
 ---------------------------
+
+TODO
+----------------------
+
+This program is in it's alpha stage.  I would like to get some input on
+what people find useful/wrong with this program.  I would like to get
+both the command line interface and the python interface to be clear
+and understandable.  The command line interface should remain
+simple, with reasonable defaults, and not stray too far from similarity
+with svn.
+
+
+- Symbolic links need to be handled.
+
+- Handle propset, propget, etc...
+
+- Implement diff subcommand
+
 
 Related Links
 ------------------------
