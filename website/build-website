@@ -1,0 +1,78 @@
+#!/usr/bin/env python
+# this file should be run from the webroot
+import os, sys
+from os.path import join, basename
+import pipes
+from ConfigParser import ConfigParser, NoOptionError
+from md5 import md5
+import tempfile
+
+BLOCK_SIZE = 1024
+cfg = ConfigParser()
+cfg.read('src/.md5sums')
+if not cfg.has_section('md5sums'):
+    cfg.add_section('md5sums')
+    cfg.write(file('src/.md5sums', 'w'))
+
+#copied from useless.base.util
+def md5sum(afile):
+    """returns the standard md5sum hexdigest
+    for a file object"""
+    m = md5()
+    block = afile.read(BLOCK_SIZE)
+    while block:
+        m.update(block)
+        block = afile.read(BLOCK_SIZE)
+    return m.hexdigest()
+
+
+def get_stored_md5sum(fullpath):
+    try:
+        md = cfg.get('md5sums', fullpath)
+    except NoOptionError:
+        return 'new'
+    return md
+
+def store_page_md5sum(fullpath, md5=None):
+    infile = fullpath
+    if md5 is None:
+        md5 = md5sum(file(infile))
+    cfg.set('md5sums', fullpath, md5)
+    cfg.write(file('src/.md5sums', 'w'))
+    
+
+def append_berlios_footer(fullpath):
+    tmp, path = tempfile.mkstemp('build', 'page', '.')
+    tmp = file(path, 'w')
+    tmp.write(file(fullpath).read())
+    tmp.write('.. include:: src/.berlios-footer\n')
+    tmp.close()
+    return path
+
+def buildpage(fullpath, targetpath='.'):
+    infile = append_berlios_footer(fullpath)
+    outfile = join(targetpath, '%s.html' % basename(fullpath))
+    print 'building', page
+    t = pipes.Template()
+    t.prepend('rst2html $IN', 'f-')
+    t.copy(infile, outfile)
+    os.remove(infile)
+    
+def check_page(fullpath):
+    md5 = md5sum(file(fullpath))
+    smd5 = get_stored_md5sum(fullpath)
+    if md5 != smd5:
+        buildpage(fullpath)
+        store_page_md5sum(fullpath, md5)
+    
+
+toppages = ['index']
+#docpages = ['notes', 'gui', 'problems', 'abstract', 'schema']
+docpages = []
+for page in toppages:
+    check_page(join('src', page))
+
+for page in docpages:
+    check_page(join('src/docs', page))
+
+    

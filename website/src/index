@@ -1,0 +1,76 @@
+Etcsvn
+========
+
+hello there.
+
+--------------------------
+
+Dependencies
+---------------------
+
+python_
+
+pysvn_
+
+subversion_
+
+Etcsvn should work as is on any unix/posix type system.
+
+-----------------------------
+
+Intended Audience/Users
+----------------------------------
+
+sysadmins
+
+
+----------------------
+
+Download
+--------------
+
+not yet.
+
+------------------
+
+Project
+----------
+
+project_ page
+
+-----------------------
+
+Documentation
+---------------------
+
+how this website is maintained_.
+
+---------------------------
+
+Related Links
+------------------------
+
+Useless_ -- My toolkit of python code.
+
+Python_ -- Except for a few shell scripts, paella is written
+	entirely in python.
+
+Paella_ -- quickly describe palla.
+
+-------------------
+
+Authors
+-----------
+
+`Joseph Rawson`_ <umeboshi@gregscomputerservice.com>
+
+-----------------
+
+.. _paella: http://paella.berlios.de
+.. _debian: http://debian.org
+.. _useless: http://useless.berlios.de
+.. _python: http://python.org
+.. _subversion: http://subversion.tigris.org/
+.. _pysvn: http://pysvn.tigris.org/
+.. _Joseph Rawson:  mailto:umeboshi@gregscomputerservice.com
+.. _maintained: svnwebsite.html

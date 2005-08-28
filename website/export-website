@@ -1,0 +1,2 @@
+#!/bin/bash
+ssh shell.berlios.de svn export --force svn://svn.berlios.de/etcsvn/website /home/groups/etcsvn/htdocs
