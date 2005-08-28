@@ -26,6 +26,9 @@ class EtcSvn(object):
         self.workspace = self.maincfg.get('workspace', 'wcpath')
         self.svn = pysvn.Client()
         self.repos_url = self.maincfg.get('repos', 'url')
+        if os.getuid != 0:
+            print 'EtcSvn must be run as root'
+            raise RuntimeError
         os.umask(077)
         
     def _wspath(self, fullpath):
