@@ -40,7 +40,7 @@ tools that may not be available on the system your configuring.
 
 -------------------
 
-Limitatations
+Limitations
 -------------------
 
 Currently etcsvn doesn't handle symbolic links, but support is planned.  Also, 
@@ -48,6 +48,12 @@ you can't import/export directories recursively.  I am not certain if I will imp
 that or not.  
 
 There is no revision support yet.
+
+There is should be a little work done on the repository layout.  It should be
+possible to place many systems in one repository, or have separate 
+repositories for clients, networks, etc.
+
+---------------------
 
 Dependencies
 ---------------------
@@ -58,14 +64,15 @@ pysvn_ -- I like this extension better than the official one.
 
 subversion_ --  If not a dependency, then highly recommended
 
-Etcsvn should work as is on any unix/posix type system.
+Etcsvn should work as is on any Unix/posix type system.
 
 -----------------------------
 
 Intended Audience/Users
 ----------------------------------
 
-sysadmins
+This program is intended for system administrators who intend to
+use this either interactively or in shell scripts.
 
 
 ----------------------
@@ -99,10 +106,13 @@ Related Links
 
 Useless_ -- My toolkit of python code.
 
-Python_ -- Except for a few shell scripts, paella is written
-	entirely in python.
+Python_ -- Etcsvn is written entirely in python.
 
-Paella_ -- quickly describe palla.
+Paella_ -- I plan to integrate etcsvn with paella.
+
+pysvn_ -- This is a pretty nice python extension
+
+Subversion_ --  Etcsvn is built around subversion.
 
 -------------------
 

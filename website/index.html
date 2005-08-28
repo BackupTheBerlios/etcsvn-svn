@@ -40,24 +40,29 @@ in being able to edit system configuration files in a convenient manner with
 tools that may not be available on the system your configuring.</p>
 </div>
 <hr class="docutils" />
-<div class="section" id="limitatations">
-<h1><a name="limitatations">Limitatations</a></h1>
+<div class="section" id="limitations">
+<h1><a name="limitations">Limitations</a></h1>
 <p>Currently etcsvn doesn't handle symbolic links, but support is planned.  Also, 
 you can't import/export directories recursively.  I am not certain if I will implement
 that or not.</p>
 <p>There is no revision support yet.</p>
+<p>There is should be a little work done on the repository layout.  It should be
+possible to place many systems in one repository, or have separate 
+repositories for clients, networks, etc.</p>
 </div>
+<hr class="docutils" />
 <div class="section" id="dependencies">
 <h1><a name="dependencies">Dependencies</a></h1>
 <p><a class="reference" href="http://python.org">python</a> -- A good scripting language</p>
 <p><a class="reference" href="http://pysvn.tigris.org/">pysvn</a> -- I like this extension better than the official one.</p>
 <p><a class="reference" href="http://subversion.tigris.org/">subversion</a> --  If not a dependency, then highly recommended</p>
-<p>Etcsvn should work as is on any unix/posix type system.</p>
+<p>Etcsvn should work as is on any Unix/posix type system.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="intended-audience-users">
 <h1><a name="intended-audience-users">Intended Audience/Users</a></h1>
-<p>sysadmins</p>
+<p>This program is intended for system administrators who intend to
+use this either interactively or in shell scripts.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="download">
@@ -79,11 +84,10 @@ that or not.</p>
 <div class="section" id="related-links">
 <h1><a name="related-links">Related Links</a></h1>
 <p><a class="reference" href="http://useless.berlios.de">Useless</a> -- My toolkit of python code.</p>
-<dl class="docutils">
-<dt><a class="reference" href="http://python.org">Python</a> -- Except for a few shell scripts, paella is written</dt>
-<dd>entirely in python.</dd>
-</dl>
-<p><a class="reference" href="http://paella.berlios.de">Paella</a> -- quickly describe palla.</p>
+<p><a class="reference" href="http://python.org">Python</a> -- Etcsvn is written entirely in python.</p>
+<p><a class="reference" href="http://paella.berlios.de">Paella</a> -- I plan to integrate etcsvn with paella.</p>
+<p><a class="reference" href="http://pysvn.tigris.org/">pysvn</a> -- This is a pretty nice python extension</p>
+<p><a class="reference" href="http://subversion.tigris.org/">Subversion</a> --  Etcsvn is built around subversion.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="authors">
