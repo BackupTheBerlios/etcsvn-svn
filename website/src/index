@@ -33,8 +33,21 @@ possible.  This is also true when restoring files, as the ownership and
 permissions are set after the file is created.
 
 I am trying to make etcsvn a bridge between your system and the working
-copy.
+copy.  The goal is to provide only what is necessary to aid a system admin
+in being able to edit system configuration files in a convenient manner with
+tools that may not be available on the system your configuring.
 
+
+-------------------
+
+Limitatations
+-------------------
+
+Currently etcsvn doesn't handle symbolic links, but support is planned.  Also, 
+you can't import/export directories recursively.  I am not certain if I will implement
+that or not.  
+
+There is no revision support yet.
 
 Dependencies
 ---------------------
