@@ -1,0 +1,16 @@
+Source: etcsvn
+Section: admin
+Priority: optional
+Maintainer: Joseph Rawson <umeboshi@gregscomputerservice.com>
+Build-Depends: debhelper (>= 4.0.0), cdbs, python-dev
+Standards-Version: 3.6.1
+
+Package: etcsvn
+Architecture: any
+Depends: python-svn, subversion
+Section:	admin
+Description: manage system configuration in a subversion repository
+ Etcsvn is a command line program for managing system configurations 
+ in subversion. Etcsvn doesn't make a working copy out of your /etc, but 
+ uses a temporary workspace. Etcsvn will preserve ownership/permissions 
+ of the files being tracked.

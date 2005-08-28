@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/python-distutils.mk
+
+clean::
+	rm -rf build
+	dh_clean `find -path *.pyc`
+	dh_clean `find -path *~`
+	dh_clean configure-stamp
