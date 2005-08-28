@@ -8,6 +8,34 @@ files being tracked.
 
 --------------------------
 
+
+The Problem
+--------------------
+
+Suppose you want to keep track of important config files on a system in a
+subversion repository.  There are a few problems with using svn directly.
+One problem is that you need to keep track of ownership and permission
+modes of files and directories that you are tracking.  It is somewhat difficult 
+to manage the repository without access to a working copy, but a working
+copy is twice as big as what it works on.  Also there is the possibility that 
+you want to track some files in /var or somewhere else.
+
+-------------------------
+
+What to do about it
+---------------------------
+
+Etcsvn tries to provide a simple command line interface to manage files
+on you system.  What it does is make a temporary working copy on the
+system.  Etcsvn must be run as root, and it sets a umask of 077 before
+creating any file or directory.  This makes the working copy as secure as
+possible.  This is also true when restoring files, as the ownership and 
+permissions are set after the file is created.
+
+I am trying to make etcsvn a bridge between your system and the working
+copy.
+
+
 Dependencies
 ---------------------
 
@@ -46,9 +74,9 @@ project_ page
 Documentation
 ---------------------
 
-None yet.
+This program is designed to have an interface similar to svn.  Just typing
+"etcsvn" will give you a usage synopsis.  
 
-A little help on the command line.  Just type etcsvn.
 
 
 ---------------------------
