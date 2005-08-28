@@ -60,7 +60,7 @@ sysadmins
 Download
 --------------
 
-not yet.
+Here is a source tarball_.
 
 ------------------
 
@@ -108,3 +108,4 @@ Authors
 .. _pysvn: http://pysvn.tigris.org/
 .. _Joseph Rawson:  mailto:umeboshi@gregscomputerservice.com
 .. _maintained: svnwebsite.html
+.. _tarball: http://download.berlios.de/etcsvn/etcsvn_0.1.0.tar.gz
