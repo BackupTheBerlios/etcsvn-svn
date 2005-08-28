@@ -1,4 +1,4 @@
-import os
+import os, sys
 from os.path import join
 from urlparse import urlparse
 from ConfigParser import ConfigParser
@@ -26,9 +26,9 @@ class EtcSvn(object):
         self.workspace = self.maincfg.get('workspace', 'wcpath')
         self.svn = pysvn.Client()
         self.repos_url = self.maincfg.get('repos', 'url')
-        if os.getuid != 0:
+        if os.getuid() != 0:
             print 'EtcSvn must be run as root'
-            raise RuntimeError
+            sys.exit(1)
         os.umask(077)
         
     def _wspath(self, fullpath):
