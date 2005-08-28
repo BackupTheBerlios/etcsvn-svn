@@ -1,18 +1,21 @@
 Etcsvn
 ========
 
-hello there.
+Etcsvn is a command line program for managing system configurations in 
+subversion. Etcsvn doesn't make a working copy out of your /etc, but uses 
+a temporary workspace. Etcsvn will preserve ownership/permissions of the 
+files being tracked.
 
 --------------------------
 
 Dependencies
 ---------------------
 
-python_
+python_ -- A good scripting language
 
-pysvn_
+pysvn_ -- I like this extension better than the official one.
 
-subversion_
+subversion_ --  If not a dependency, then highly recommended
 
 Etcsvn should work as is on any unix/posix type system.
 
@@ -43,7 +46,10 @@ project_ page
 Documentation
 ---------------------
 
-how this website is maintained_.
+None yet.
+
+A little help on the command line.  Just type etcsvn.
+
 
 ---------------------------
 
