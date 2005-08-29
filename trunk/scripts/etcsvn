@@ -67,14 +67,8 @@ if not len(args):
 
 command = args[0]
 
-# import and export need a filename arguement
-filenames = []
-if command in ['import', 'export']:
-    try:
-        filenames = args[1:]
-    except IndexError:
-        raise IndexError, '%s command needs a filename argument' % command
-elif command == 'help':
+# Handle help        
+if command == 'help':
     try:
         hcommand = args[1]
     except IndexError:
@@ -89,6 +83,18 @@ elif command == 'help':
         print 'No help available for', hcommand
         print 'Supported commands are', ' '.join(HELP.keys())
         sys.exit(1)
+
+# check for filename args
+try:
+    filenames = args[1:]
+except IndexError:
+    filenames = []
+# import and export need a filename arguement
+if command in ['import', 'export']:
+    if not len(filenames):
+        print '%s requires a filename arguement' % command
+        sys.exit(1)
+
 
 for filename in filenames:
     if filename[0] != '/':
@@ -115,11 +121,18 @@ elif command == 'backup':
     if len(filenames):
         allfiles = es.get_filelist()
         okfiles = [f for f in filenames if f in allfiles]
-        map(es.add_file, okfiles)
+        for afile in okfiles:
+            es.add_file(afile, importfile=False)
     else:
         es.update_from_system()
 elif command == 'restore':
-    es.export_to_system()
+    if len(filenames):
+        allfiles = es.get_filelist()
+        okfiles = [f for f in filenames if f in allfiles]
+        for afile in okfiles:
+            es.export_file(afile)
+    else:
+        es.export_to_system()
 elif command == 'clean':
     es.remove_workspace()
 elif command == 'import':

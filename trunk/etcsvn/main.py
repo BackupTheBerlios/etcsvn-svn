@@ -175,7 +175,16 @@ class EtcSvn(object):
     def set_path_info(self, fullpath, info):
         own = '%s:%s' % (info['user'], info['group'])
         os.system('chown %s %s' % (own, fullpath))
-        os.system('chmod %s %s' % (info['mode'][-4:], fullpath))
+        mode = info['mode']
+        # eval is dangerous
+        # try to make sure its small number
+        if len(mode) <= 7 and mode.isdigit():
+            mode = eval(mode)
+        else:
+            raise RuntimeError, 'There was a bad mode value passed'
+        os.chmod(fullpath, mode)
+        mtime = int(info['mtime'])
+        os.utime(fullpath, (mtime, mtime))
         
         
 
