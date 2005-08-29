@@ -89,46 +89,58 @@ use this either interactively or in shell scripts.</p>
 &quot;etcsvn&quot; will give you a usage synopsis.</p>
 <p>Usage: etcsvn &lt;cmd&gt;
 With these subcommands:</p>
-<ul class="simple">
-<li>checkup
-This command will check all of the files listed in the
+<ul>
+<li><p class="first">checkup</p>
+<p>This command will check all of the files listed in the
 repository configuration, and update changed files.  Doesn't check
-for ownership/permission changes.</li>
-<li>restore       
-This command will export files tracked in your repository
+for ownership/permission changes.</p>
+</li>
+<li><p class="first">restore</p>
+<p>This command will export files tracked in your repository
 configuration to the system.  This command will overwrite any files
-already there.</li>
-<li>create        
-This command will create a local repository on your system,
-using the url option in the config.</li>
-<li>listfiles
-This command will list the files being tracked in the
-repository.</li>
-<li>update
-This command will update your working copy.</li>
-<li>status                
-This command will report the status of your workspace.</li>
-<li>export
-This command takes a filename argument. This command will
-export a file from your working copy to the system.</li>
-<li>clean
-This command will remove your workspace, modified or not.</li>
-<li>commit
-This command will commit the workspace to the repository.</li>
-<li>import
-This command takes a filename argument.  If the filename
+already there.</p>
+</li>
+<li><p class="first">create</p>
+<p>This command will create a local repository on your system,
+using the url option in the config.</p>
+</li>
+<li><p class="first">listfiles</p>
+<p>This command will list the files being tracked in the
+repository.</p>
+</li>
+<li><p class="first">update</p>
+<p>This command will update your working copy.</p>
+</li>
+<li><p class="first">status</p>
+<p>This command will report the status of your workspace.</p>
+</li>
+<li><p class="first">export</p>
+<p>This command takes a filename argument. This command will
+export a file from your working copy to the system.</p>
+</li>
+<li><p class="first">clean</p>
+<p>This command will remove your workspace, modified or not.</p>
+</li>
+<li><p class="first">commit</p>
+<p>This command will commit the workspace to the repository.</p>
+</li>
+<li><p class="first">import</p>
+<p>This command takes a filename argument.  If the filename
 doesn't start with '/' then it will be referenced from your $PWD.  Only
 files are supported, etcsvn is unable to handle symbolic links, or 
 directory arguments.  It will handle parent directories to the file
 correctly though.
-Example:  etcsvn import /etc/fstab</li>
-<li>backup
-This command will update your working copy with all the files
+Example:  etcsvn import /etc/fstab</p>
+</li>
+<li><p class="first">backup</p>
+<p>This command will update your working copy with all the files
 being tracked in the repository configuration.  This command will track
-ownership/permission changes.</li>
-<li>setup
-This command will checkout a working copy from the repository
-to your workspace.</li>
+ownership/permission changes.</p>
+</li>
+<li><p class="first">setup</p>
+<p>This command will checkout a working copy from the repository
+to your workspace.</p>
+</li>
 </ul>
 </div>
 <hr class="docutils" />

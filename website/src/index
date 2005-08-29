@@ -111,40 +111,50 @@ Usage: etcsvn <cmd>
 With these subcommands:
 
 - checkup
+
   This command will check all of the files listed in the
   repository configuration, and update changed files.  Doesn't check
   for ownership/permission changes.
 
 - restore	
+
   This command will export files tracked in your repository
   configuration to the system.  This command will overwrite any files
   already there.
 
 - create	
+
   This command will create a local repository on your system,
   using the url option in the config.
 
 - listfiles
+
   This command will list the files being tracked in the
   repository.
 
 - update
+
   This command will update your working copy.
 
 - status		
+
   This command will report the status of your workspace.
 
 - export
+
   This command takes a filename argument. This command will
   export a file from your working copy to the system.
 
 - clean
+
   This command will remove your workspace, modified or not.
 
 - commit
+
   This command will commit the workspace to the repository.
 
 - import
+
   This command takes a filename argument.  If the filename
   doesn't start with '/' then it will be referenced from your $PWD.  Only
   files are supported, etcsvn is unable to handle symbolic links, or 
@@ -153,11 +163,13 @@ With these subcommands:
   Example:  etcsvn import /etc/fstab
 
 - backup
+
   This command will update your working copy with all the files
   being tracked in the repository configuration.  This command will track
   ownership/permission changes.
 
 - setup
+
   This command will checkout a working copy from the repository
   to your workspace.
 
