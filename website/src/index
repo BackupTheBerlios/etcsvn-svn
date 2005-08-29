@@ -210,6 +210,8 @@ pysvn_ -- This is a pretty nice python extension
 
 Subversion_ --  Etcsvn is built around subversion.
 
+Dconf_ -- Looking at dconf inspired me to write etcsvn.
+
 -------------------
 
 Authors
@@ -228,3 +230,4 @@ Authors
 .. _Joseph Rawson:  mailto:umeboshi@gregscomputerservice.com
 .. _maintained: svnwebsite.html
 .. _tarball: http://download.berlios.de/etcsvn/etcsvn_0.1.1.tar.gz
+.. _dconf: http://dag.wieers.com/home-made/dconf/
