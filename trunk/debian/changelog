@@ -1,3 +1,12 @@
+etcsvn (0.1.2) sarge; urgency=low
+
+  * symbolic links are skipped now, will be handled later
+  * make a blank config file by default if none is present in working copy
+  * import, export and backup now take a list of filenames
+
+
+ -- Joseph Rawson <umeboshi@gregscomputerservice.com>  Sun, 28 Aug 2005 22:02:12 -0500
+
 etcsvn (0.1.1) sarge; urgency=low
 
   * bugfix, make sure root inits Etcsvn class

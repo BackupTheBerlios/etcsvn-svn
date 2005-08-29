@@ -17,7 +17,7 @@ class NoFileError(IOError):
 class EtcSvnConfig(ConfigParser):
     def get_files(self, section):
         data = self.get(section, 'files')
-        return [x.strip() for x in data.split('\n')]
+        return [x.strip() for x in data.split('\n') if x.strip()]
     
 class EtcSvn(object):
     def __init__(self, cfg):
@@ -143,6 +143,10 @@ class EtcSvn(object):
         files = self.cfg.get_files(section)
         if fullpath in files:
             raise ValueError, '%s already imported' % fullpath
+        if os.path.islink(fullpath):
+            print fullpath, 'could not be imported'
+            print 'symbolic links are not supported yet.'
+            sys.exit(1)
         self.add_file(fullpath)
         files.append(fullpath)
         data = '\n'.join(files) + '\n'
@@ -197,3 +201,6 @@ class EtcSvn(object):
         
     def get_filelist(self):
         return self.cfg.get_files('main')
+
+    def diff(self, recurse=True):
+        return
