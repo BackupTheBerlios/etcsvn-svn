@@ -44,50 +44,6 @@ def ujoin(*args):
     """
     return '_'.join(args)
 
-def writefile(path, string):
-    """this funcion will quickly write a
-    string to a path.
-    """
-    f = file(path, 'w')
-    f.write(string)
-    f.close()
-
-def readfile(filename):
-    """this function will quickly read
-    a filname and return a string of
-    its contents.
-    """
-    f = file(filename)
-    s = f.read()
-    f.close()
-    return s
-
-def backuptree(directory, backup):
-    """This function takes two directory arguements.
-    The backup directory is not required to exist,
-    but needs to be on the same device as the first
-    arguement.  It uses hard links to backup the files
-    in the directory.  It doesn't handle symbolic links.
-    """
-    input, output = os.popen2('find %s -type d' %directory)
-    dir = output.readline().strip()
-    while dir:
-        makepaths(join(backup, dir))
-        dir = output.readline().strip()
-    input, output = os.popen2('find %s -type f' %directory)
-    file = output.readline().strip()
-    while file:
-        os.link(file, join(backup, file))
-        file = output.readline().strip()
-        
-def has_extension(filename, extension, dot=True):
-    """This function can test if a filename is a
-    .bz2 or whatever.
-    """
-    if extension[0] != '.' and dot:
-        extension = '.' + extension
-    return filename[-len(extension):] == extension
-
 def unroot(fullpath):
     if fullpath[0] != '/':
         raise ValueError, 'absolute path to file needed.'
