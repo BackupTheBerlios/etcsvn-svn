@@ -67,13 +67,16 @@ class EtcSvn(object):
         self.get_config()
         
     def remove_workspace(self):
-        # copied from python library reference
-        for root, dirs, files in os.walk(self.workspace, topdown=False):
-            for name in files:
-                os.remove(join(root, name))
-            for name in dirs:
-                os.rmdir(join(root, name))
-        os.rmdir(self.workspace)
+        if os.path.isdir(self.workspace):
+            # copied from python library reference
+            for root, dirs, files in os.walk(self.workspace, topdown=False):
+                for name in files:
+                    os.remove(join(root, name))
+                for name in dirs:
+                    os.rmdir(join(root, name))
+            os.rmdir(self.workspace)
+        else:
+            print 'No workspace is present'
             
     def checkout_workspace(self):
         os.umask(077)
