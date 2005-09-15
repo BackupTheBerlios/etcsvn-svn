@@ -1,8 +1,6 @@
 Etcsvn
 ========
 
-**My internet access is temporarily down due to a bad storm in my area.**
-
 Etcsvn is a command line program for managing system configurations in 
 subversion. Etcsvn doesn't make a working copy out of your /etc, but uses 
 a temporary workspace. Etcsvn will preserve ownership/permissions of the 
