@@ -11,7 +11,8 @@ url = 'http://developer.berlios.de/projects/etcsvn'
 # scripts = ['scripts/etcsvn']
 scripts = []
 data_files = [('/usr/sbin', ['scripts/etcsvn']),
-              ('/etc', ['config/etcsvn.conf'])]
+              ('/etc', ['config/etcsvn.conf']),
+              ('/var/lib/etcsvn', [])]
 packages = ['etcsvn']
 setup(name='etcsvn',
       version=version,
