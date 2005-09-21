@@ -11,6 +11,8 @@ parser.add_option('--root', action='store', type='string', dest='root',
                   default='/', help='Use another directory as root.')
 parser.add_option('--workspace', action='store', type='string', dest='workspace',
                   default='', help='Use a special workspace.')
+parser.add_option('--url', action='store', type='string', dest='url',
+                  default='', help='Use a custom url')
 parser.add_option('-m', '--message', action='store', type='string', dest='message',
                   default='Automatic Commit', help='send a commit message')
 
@@ -21,6 +23,8 @@ config = ConfigParser()
 config.read(CONFIGFILE)
 
 es = EtcSvn(config)
+if opts.url:
+    es.repos_url = opts.url
 
 COMMANDS = ['create', 'setup', 'update', 'checkup', 'backup', 'restore', 'clean',
             'import', 'export', 'status', 'commit', 'listfiles']

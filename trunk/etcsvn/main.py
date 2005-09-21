@@ -15,9 +15,15 @@ class NoFileError(IOError):
 
 
 class EtcSvnConfig(ConfigParser):
+    def _list_lines(self, astring):
+        return [x.strip() for x in astring.split('\n') if x.strip()]
+        
     def get_files(self, section):
-        data = self.get(section, 'files')
-        return [x.strip() for x in data.split('\n') if x.strip()]
+        return self._list_lines(self.get(section, 'files'))
+
+    def get_dirs(self, section):
+        return self._list_lines(self.get(section, 'dirs'))
+        
     
 class EtcSvn(object):
     def __init__(self, cfg):
@@ -73,7 +79,11 @@ class EtcSvn(object):
                 for name in files:
                     os.remove(join(root, name))
                 for name in dirs:
-                    os.rmdir(join(root, name))
+                    fname = join(root, name)
+                    if os.path.islink(fname):
+                        os.remove(fname)
+                    else:
+                        os.rmdir(join(root, name))
             os.rmdir(self.workspace)
         else:
             print 'No workspace is present'
@@ -89,36 +99,55 @@ class EtcSvn(object):
     def check_file(self, fullpath):
         m = md5sum(file(fullpath))
         w = self.svn.info(self._wspath(fullpath)).checksum
-        if m != w:
-            self.add_file(fullpath, importfile=False)
-
-            
+        return m == w
+    
     def check_files(self):
         for section in self.cfg.sections():
             for afile in self.cfg.get_files(section):
-                self.check_file(afile)
+                if not self.check_file(afile):
+                    self.add_file(afile, importfile=False)
                 
-        
-    def add_file(self, fullpath, importfile=True):
+    def _handle_intermediate_dirs(self, fullpath):
         path = unroot(fullpath)
-        if not os.path.isfile(fullpath):
-            raise NoFileError, 'no such file %s' % fullpath
         ws = self.workspace
-        dirs = os.path.dirname(path).split('/')
-        cpath = ws
-        rpath = '/'
-        for d in dirs:
-            rpath = join(rpath, d)
-            cpath = join(cpath, d)
-            if not os.path.isdir(cpath):
-                os.mkdir(cpath)
-                self.svn.add(cpath)
-            self.set_wspath_info(rpath)
-        base = os.path.basename(path)
-        fname = join(cpath, base)
+        wsname = join(ws, path)
+        if os.path.dirname(path):
+            dirs = os.path.dirname(path).split('/')
+            cpath = ws
+            rpath = '/'
+            for d in dirs:
+                rpath = join(rpath, d)
+                cpath = join(cpath, d)
+                if os.path.islink(rpath):
+                    print 'There is a symlink in an intermediate directory'
+                    sys.exit(1)
+                if not os.path.isdir(cpath):
+                    os.mkdir(cpath)
+                    self.svn.add(cpath)
+                self.set_wspath_info(rpath)
+        else:
+            if not os.path.isdir(wsname):
+                os.mkdir(wsname)
+                self.svn.add(wsname)
+            self.set_wspath_info(fullpath)
+            
+    def add_file(self, fullpath, importfile=True):
+        print 'adding', fullpath
+        if not os.path.isfile(fullpath):
+            if not os.path.islink(fullpath):
+                raise NoFileError, 'no such file %s' % fullpath
+        self._handle_intermediate_dirs(fullpath)
+        fname = join(self.workspace, unroot(fullpath))
         if importfile:
             if os.path.isfile(fname):
                 raise ExistsError
+        if os.path.islink(fullpath):
+            self._add_symlink(fullpath, importfile)
+        else:
+            self._add_file(fullpath, importfile)
+
+    def _add_file(self, fullpath, importfile):
+        fname = join(self.workspace, unroot(fullpath))
         data = file(fullpath).read()
         wfile = file(fname, 'w')
         wfile.write(data)
@@ -126,13 +155,22 @@ class EtcSvn(object):
         if importfile:
             self.svn.add(fname)
         self.set_wspath_info(fullpath)
-        
+
+    def _add_symlink(self, fullpath, importfile):
+        fname = join(self.workspace, unroot(fullpath))
+        target = os.readlink(fullpath)
+        if os.path.exists(fname):
+            os.remove(fname)
+        os.symlink(target, fname)
+        if importfile:
+            self.svn.add(fname)
+            
     def add_path(self, fullpath):
         if not os.path.exists(fullpath):
             raise NoFileError
 
         
-    def update_from_system(self):
+    def update_from_systemOld(self):
         for section in self.cfg.sections():
             files = self.cfg.get_files(section)
             for afile in files:
@@ -144,23 +182,39 @@ class EtcSvn(object):
            
     def import_file(self, fullpath, section='main'):
         files = self.cfg.get_files(section)
+        dirs = [d for d in self.cfg.get_dirs(section) if d.startswith(fullpath)]
         if fullpath in files:
             raise ValueError, '%s already imported' % fullpath
-        if os.path.islink(fullpath):
-            print fullpath, 'could not be imported'
-            print 'symbolic links are not supported yet.'
-            sys.exit(1)
-        self.add_file(fullpath)
-        files.append(fullpath)
-        data = '\n'.join(files) + '\n'
-        self.cfg.set(section, 'files', data)
-        self.cfg.write(file(join(self.workspace, 'etcsvn.conf'), 'w'))
+        if dirs:
+            raise ValueError, '%s already imported' % fullpath
+        if os.path.isdir(fullpath) and not os.path.islink(fullpath):
+            self.add_directory(fullpath)
+            dirs = self.cfg.get_dirs(section)
+            dirs.append(fullpath)
+            data = '\n'.join(dirs) + '\n'
+            self.cfg.set(section, 'dirs', data)
+            self.cfg.write(file(join(self.workspace, 'etcsvn.conf'), 'w'))
+        else:
+            self.add_file(fullpath)
+            files.append(fullpath)
+            data = '\n'.join(files) + '\n'
+            self.cfg.set(section, 'files', data)
+            self.cfg.write(file(join(self.workspace, 'etcsvn.conf'), 'w'))
+
+    def _add_link(self, fullpath):
+        ltarget = os.readlink(fullpath)
+        
 
     def export_file(self, fullpath, section='main'):
         path = self._wspath(fullpath)
+        symlink = False
         if not os.path.isfile(path):
             raise NoFileError, 'This file %s not in the repository' % fullpath
-        data = file(path).read()
+        if os.path.islink(path):
+            symlink = True
+            data = os.readlink(path)
+        else:
+            data = file(path).read()
         path = unroot(fullpath)
         dirs = os.path.dirname(path).split('/')
         rpath = '/'
@@ -168,12 +222,15 @@ class EtcSvn(object):
             rpath = join(rpath, d)
             if not os.path.isdir(rpath):
                 os.mkdir(rpath)
-            self.set_path_info(rpath, self.get_wspath_info(rpath))    
-        newfile = file(fullpath, 'w')
-        newfile.write(data)
-        newfile.close()
-        info = self.get_wspath_info(fullpath)
-        self.set_path_info(fullpath, info)
+            self.set_path_info(rpath, self.get_wspath_info(rpath))
+        if symlink:
+            os.symlink(fullpath, data)
+        else:
+            newfile = file(fullpath, 'w')
+            newfile.write(data)
+            newfile.close()
+            info = self.get_wspath_info(fullpath)
+            self.set_path_info(fullpath, info)
 
     def set_path_info(self, fullpath, info):
         own = '%s:%s' % (info['user'], info['group'])
@@ -199,6 +256,7 @@ class EtcSvn(object):
             cfile = file(cpath, 'w')
             cfile.write('# EtcSvn generated blank configuration\n')
             cfile.write('[main]\n')
+            cfile.write('dirs:\n')
             cfile.write('files:\n\n')
             cfile.close()
             self.svn.add(cpath)
@@ -216,3 +274,37 @@ class EtcSvn(object):
 
     def diff(self, recurse=True):
         return
+
+
+    def add_directory(self, fullpath, importdir=True):
+        print 'adding directory', fullpath
+        self._handle_intermediate_dirs(fullpath)
+        for root, dirs, files in  os.walk(fullpath):
+            for name in dirs:
+                fname = join(root, name)
+                if os.path.islink(fname):
+                    self._add_symlink(fname, importfile=importdir)
+                else:
+                    wsname = self._wspath(fname)
+                    if importdir:
+                        os.mkdir(wsname)
+                        self.svn.add(wsname)
+                    self.set_wspath_info(fname)
+            for name in files:
+                fname = join(root, name)
+                wsname = self._wspath(fname)
+                if os.path.islink(fname):
+                    self._add_symlink(fname, importfile=importdir)
+                else:
+                    if os.path.isfile(fname):
+                        if importdir:
+                            self._add_file(fname, importfile=importdir)
+                        else:
+                            if not self.check_file(fname):
+                                self.add_file(fname, importfile=importdir)
+                        
+    def update_from_system(self):
+        for adir in self.cfg.get_dirs('main'):
+            self.add_directory(adir, importdir=False)
+        for afile in self.cfg.get_files(section):
+            self.add_file(afile, importfile=False)
