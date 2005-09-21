@@ -42,9 +42,8 @@ tools that may not be available on the system your configuring.</p>
 <hr class="docutils" />
 <div class="section" id="limitations">
 <h1><a name="limitations">Limitations</a></h1>
-<p>Currently etcsvn doesn't handle symbolic links, but support is planned.  Also, 
-you can't import/export directories recursively.  I am not certain if I will implement
-that or not.</p>
+<p>I am currently working on getting etcsvn to handle symbolic links.  I am also
+adding an option to track directories recursively.</p>
 <p>There is no revision support yet.</p>
 <p>There is should be a little work done on the repository layout.  It should be
 possible to place many systems in one repository, or have separate 
@@ -153,10 +152,32 @@ and understandable.  The command line interface should remain
 simple, with reasonable defaults, and not stray too far from similarity
 with svn.</p>
 <ul class="simple">
-<li>Symbolic links need to be handled.</li>
-<li>Handle propset, propget, etc...</li>
-<li>Implement diff subcommand</li>
+<li>Symbolic links need to be handled.<ul>
+<li>preliminary work has started on this</li>
 </ul>
+</li>
+<li>Handle propset, propget, etc...<ul>
+<li>This seems to be working ok.</li>
+<li>Handling mtime with props</li>
+</ul>
+</li>
+<li>Implement diff subcommand</li>
+<li>Handle directories recursively</li>
+<li>Add repository url as command line option</li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="using-a-remote-repository">
+<h1><a name="using-a-remote-repository">Using a remote repository</a></h1>
+<p>Here is an example of using a remote repository accessed by svn+ssh, to
+remotely administer a server, using ssh-agent.  It is assumed that you
+are familiar with handling ssh keys.</p>
+<p>Suppose your repository is located on server &quot;goldie&quot; in /repos, and you need to be
+able to access it from server &quot;webfoot&quot;.  You need ssh access to both goldie, and
+webfoot.  Make sure that the ssh-agent is aware of the appropriate key(s), then from 
+your workstation, ssh -A webfoot.  On webfoot, in /etc/etcsvn.conf, make sure that the 
+url is &quot;svn+ssh://username&#64;goldie/repos/hosts/webfoot&quot; or something that reflects your
+repository.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="related-links">
