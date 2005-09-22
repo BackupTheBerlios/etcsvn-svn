@@ -2,6 +2,7 @@
 #from os.path import isfile, isdir, join
 #from gzip import GzipFile
 import os
+from os.path import join, isfile, isdir, islink, exists
 from StringIO import StringIO
 from md5 import md5
 import pwd, grp
@@ -56,11 +57,26 @@ def get_file_info(fullpath):
     st = os.stat(fullpath)
     user = pwd.getpwuid(st.st_uid).pw_name
     group = grp.getgrgid(st.st_gid).gr_name
-    mode = oct(st.st_mode)
-    mtime = st.st_mtime
+    mode = str(oct(st.st_mode))
+    mtime = str(st.st_mtime)
     return dict(user=user, group=group, mode=mode, mtime=mtime)
 
+def copyfile(src, dest):
+    file(dest, 'w').writelines(file(src))
 
+def remove_directory(directory):
+    # copied from python library reference
+    for root, dirs, files in os.walk(directory, topdown=False):
+        for name in files:
+            os.remove(join(root, name))
+        for name in dirs:
+            fname = join(root, name)
+            if islink(fname):
+                os.remove(fname)
+            else:
+                os.rmdir(join(root, name))
+    os.rmdir(directory)
+    
 
 if __name__ == '__main__':
     print "don't run this file directly, unless testing it"
