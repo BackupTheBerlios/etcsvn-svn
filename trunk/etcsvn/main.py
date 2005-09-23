@@ -383,6 +383,7 @@ class EtcSvn(object):
     
     def check_files(self):
         print 'this function is not ready'
+        sys.exit(1)
         
     def import_file(self, fullpath):
         files = self.cfg.get_files('main')
@@ -394,9 +395,13 @@ class EtcSvn(object):
             print fullpath, 'already imported'
             sys.exit(1)
         if os.path.islink(fullpath):
+            print 'symlink arguments are not supported now'
+            sys.exit(1)
             self._import_link_from_system(fullpath)
             self._append_to_cfg(fullpath, 'file')
         elif os.path.isfile(fullpath):
+            print 'file arguments are not supported now'
+            sys.exit(1)
             self._import_file_from_system(fullpath)
             self._append_to_cfg(fullpath, 'file')
         elif os.path.isdir(fullpath):
