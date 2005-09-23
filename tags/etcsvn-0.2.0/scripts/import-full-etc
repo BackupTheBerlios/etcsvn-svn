@@ -1,0 +1,3 @@
+#!/bin/bash
+# this find command will import everything but empty directories
+find /etc \( -type f -o -type l \) -exec etcsvn import "{}" \;

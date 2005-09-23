@@ -1,0 +1,158 @@
+#!/usr/bin/env python
+import os, sys
+from ConfigParser import ConfigParser
+from optparse import OptionParser
+
+from etcsvn.defaults import CONFIGFILE
+from etcsvn.main import EtcSvn
+
+parser = OptionParser()
+parser.add_option('--root', action='store', type='string', dest='root',
+                  default='/', help='Use another directory as root.')
+parser.add_option('--workspace', action='store', type='string', dest='workspace',
+                  default='', help='Use a special workspace.')
+parser.add_option('--url', action='store', type='string', dest='url',
+                  default='', help='Use a custom url')
+parser.add_option('-m', '--message', action='store', type='string', dest='message',
+                  default='Automatic Commit', help='send a commit message')
+
+
+opts, args = parser.parse_args(sys.argv[1:])
+
+config = ConfigParser()
+config.read(CONFIGFILE)
+
+es = EtcSvn(config)
+if opts.url:
+    es.repos_url = opts.url
+
+COMMANDS = ['create', 'setup', 'update', 'checkup', 'backup', 'restore', 'clean',
+            'import', 'export', 'status', 'commit']
+
+HELP = {
+    'create' : """This command will create a local repository on your system,
+    using the url option in the config.""",
+    'setup' : """This command will checkout a working copy from the repository
+    to your workspace.""",
+    'update' : """This command will update your working copy.""",
+    'checkup' : """This command will check all of the files listed in the
+    repository configuration, and update changed files.  Doesn't check
+    for ownership/permission changes.""",
+    'backup' : """This command will update your working copy with all the files
+    being tracked in the repository configuration.  This command will track
+    ownership/permission changes.""",
+    'restore' : """This command will export files tracked in your repository
+    configuration to the system.  This command will overwrite any files
+    already there.""",
+    'clean' : """This command will remove your workspace, modified or not.""",
+    'import' : """This command takes a filename argument.  If the filename
+    doesn't start with '/' then it will be referenced from your $PWD.  Only
+    files are supported, etcsvn is unable to handle symbolic links, or
+    directory arguments.  It will handle parent directories to the file
+    correctly though.
+    Example:  etcsvn import /etc/fstab""",
+    'export' : """This command takes a filename argument. This command will
+    export a file from your working copy to the system.""",
+    'status' : """This command will report the status of your workspace.""",
+    'commit' : """This command will commit the workspace to the repository."""
+    }
+    
+if not len(args):
+    print 'Usage: etcsvn <cmd>'
+    print 'With these commands:'
+    print
+    for k,v in HELP.items():
+        print '%s:\t\t%s' % (k,v)
+        print
+    sys.exit(0)
+
+
+command = args[0]
+
+# Handle help        
+if command == 'help':
+    try:
+        hcommand = args[1]
+    except IndexError:
+        print 'Usage:  etcsvn help <cmd>.'
+        print 'where <cmd> is one of %s' % ', '.join(HELP.keys())
+        sys.exit(1)
+    hcommand = args[1]
+    if hcommand in HELP:
+        print HELP[hcommand]
+        sys.exit(0)
+    else:
+        print 'No help available for', hcommand
+        print 'Supported commands are', ' '.join(HELP.keys())
+        sys.exit(1)
+
+# check for filename args
+try:
+    filenames = args[1:]
+except IndexError:
+    filenames = []
+# import and export need a filename arguement
+if command in ['import', 'export']:
+    if not len(filenames):
+        print '%s requires a filename arguement' % command
+        sys.exit(1)
+
+
+for filename in filenames:
+    if filename[0] != '/':
+        print 'filename arguments should begin with /'
+        print 'changing relative file', filename
+        filename = os.path.join(os.getcwd(), filename)
+        print 'changed to', filename
+
+# load config if needed
+if command in ['checkup', 'backup', 'restore', 'import', 'export']:
+    es.get_config()
+
+    
+# ugly command tree
+if command == 'create':
+    es.create_repos()
+elif command == 'setup':
+    es.checkout_workspace()
+elif command == 'update':
+    es.update_workspace()
+elif command == 'checkup':
+    es.check_files()
+elif command == 'backup':
+    if len(filenames):
+        print "not reading args now"
+        sys.exit(1)
+        allfiles = es.get_filelist()
+        okfiles = [f for f in filenames if f in allfiles]
+        for afile in okfiles:
+            es.add_file(afile, importfile=False)
+    else:
+        es.update_from_system()
+elif command == 'restore':
+    if len(filenames):
+        print "not reading args now"
+        sys.exit(1)
+        allfiles = es.get_filelist()
+        okfiles = [f for f in filenames if f in allfiles]
+        for afile in okfiles:
+            es.export_file(afile)
+    else:
+        es.export_to_system()
+elif command == 'clean':
+    es.remove_workspace()
+elif command == 'import':
+    if len(filenames) > 1:
+        print 'Warning: support for multiple args will be dropped'
+    map(es.import_file, filenames)
+elif command == 'export':
+    if len(filenames) > 1:
+        print 'Warning: support for multiple args will be dropped'
+    map(es.export_file, filenames)
+elif command == 'status':
+    es.show_status()
+elif command == 'commit':
+    es.commit(opts.message)
+else:
+    print command, 'is not a supported command.'
+    sys.exit(1)
