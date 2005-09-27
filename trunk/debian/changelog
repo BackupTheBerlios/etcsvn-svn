@@ -1,3 +1,10 @@
+etcsvn (0.2.1) sarge; urgency=low
+
+  * bugfix, syntax error
+  
+
+ -- Joseph Rawson <umeboshi@gregscomputerservice.com>  Tue, 27 Sep 2005 09:35:44 -0500
+
 etcsvn (0.2.0) sarge; urgency=low
 
   * added support for handling recursive directories.

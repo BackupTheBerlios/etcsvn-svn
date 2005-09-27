@@ -294,7 +294,7 @@ class EtcSvn(object):
                 wsname = self._wspath(fname)
                 if not os.path.exists(wsname):
                     print 'removing', fname
-                    if os.islink(fname):
+                    if os.path.islink(fname):
                         os.remove(fname)
                     else:
                         os.rmdir(fname)
