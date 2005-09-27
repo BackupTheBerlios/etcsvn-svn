@@ -1,0 +1,44 @@
+etcsvn (0.2.1) sarge; urgency=low
+
+  * bugfix, syntax error
+  
+
+ -- Joseph Rawson <umeboshi@gregscomputerservice.com>  Tue, 27 Sep 2005 09:35:44 -0500
+
+etcsvn (0.2.0) sarge; urgency=low
+
+  * added support for handling recursive directories.
+  * temporarily removing support for handling just files.
+  
+
+ -- Joseph Rawson <umeboshi@gregscomputerservice.com>  Fri, 23 Sep 2005 13:30:35 -0500
+
+etcsvn (0.1.3) sarge; urgency=low
+
+  * starting to support symlinks
+  
+
+ -- Joseph Rawson <umeboshi@bard>  Tue, 20 Sep 2005 09:14:45 -0500
+
+etcsvn (0.1.2) sarge; urgency=low
+
+  * symbolic links are skipped now, will be handled later
+  * make a blank config file by default if none is present in working copy
+  * import, export and backup now take a list of filenames
+
+
+ -- Joseph Rawson <umeboshi@gregscomputerservice.com>  Sun, 28 Aug 2005 22:02:12 -0500
+
+etcsvn (0.1.1) sarge; urgency=low
+
+  * bugfix, make sure root inits Etcsvn class
+
+
+ -- Joseph Rawson <umeboshi@gregscomputerservice.com>  Sun, 28 Aug 2005 16:15:59 -0500
+
+etcsvn (0.1.0) sarge; urgency=low
+
+  * Initial Release.
+
+ -- Joseph Rawson <umeboshi@gregscomputerservice.com>  Sun, 28 Aug 2005 09:53:21 -0500
+
