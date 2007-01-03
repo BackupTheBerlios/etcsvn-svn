@@ -67,7 +67,6 @@ def check_page(fullpath):
     
 
 toppages = ['index']
-#docpages = ['notes', 'gui', 'problems', 'abstract', 'schema']
 docpages = []
 for page in toppages:
     check_page(join('src', page))
