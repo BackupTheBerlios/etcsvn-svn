@@ -2,11 +2,14 @@ import os, sys
 from os.path import join
 from urlparse import urlparse
 from ConfigParser import ConfigParser
+import subprocess
+
 import pysvn
 
 from etcsvn.util import md5sum, unroot
 from etcsvn.util import get_file_info, copyfile
 from etcsvn.util import remove_directory
+from etcsvn.util import set_file_info
 
 class ExistsError(IOError):
     pass
@@ -97,7 +100,9 @@ class EtcSvn(object):
         if parsed[0] == 'file':
             path = parsed[2]
             if not os.path.isdir(path):
-                os.system('svnadmin create %s' % parsed[2])
+                cmd = ['svnadmin', 'create', path]
+                #os.system('svnadmin create %s' % parsed[2])
+                subprocess.check_call(cmd)
             else:
                 print path, 'exists'
         else:
@@ -346,18 +351,7 @@ class EtcSvn(object):
                 self._update_empty_dir_from_workspace(realroot, wsroot)
                 
     def set_path_info(self, fullpath, info):
-        own = '%s:%s' % (info['user'], info['group'])
-        os.system('chown %s "%s"' % (own, fullpath))
-        mode = info['mode']
-        # eval is dangerous
-        # try to make sure its small number
-        if len(mode) <= 7 and mode.isdigit():
-            mode = eval(mode)
-        else:
-            raise RuntimeError, 'There was a bad mode value passed'
-        os.chmod(fullpath, mode)
-        mtime = int(info['mtime'])
-        os.utime(fullpath, (mtime, mtime))
+        set_file_info(fullpath, info)
         
     def get_config(self):
         cpath = os.path.join(self.workspace, 'etcsvn.conf')
@@ -370,8 +364,10 @@ class EtcSvn(object):
         self.svn.checkin(self.workspace, msg)
         
     def show_status(self):
-        os.system('svn status %s' % self.workspace)
-        
+        #os.system('svn status %s' % self.workspace)
+        cmd = ['svn', 'status', self.workspace]
+        subprocess.check_call(cmd)
+                
     def get_filelist(self):
         return self.cfg.get_files('main')
 

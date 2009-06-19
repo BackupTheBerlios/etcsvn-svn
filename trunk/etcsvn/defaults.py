@@ -1,3 +1,4 @@
+# -*- mode: python -*-
 
 BLOCK_SIZE = 1024
 

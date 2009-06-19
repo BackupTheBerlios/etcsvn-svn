@@ -1,19 +1,11 @@
-#import os, sys
-#from os.path import isfile, isdir, join
-#from gzip import GzipFile
 import os
 from os.path import join, isfile, isdir, islink, exists
 from StringIO import StringIO
 from md5 import md5
 import pwd, grp
+import subprocess
 
 from defaults import BLOCK_SIZE
-#from pipes import Template as PipeTemplate
-#import pycurl
-
-#from useless.base import debug, Error
-
-#from defaults import BLOCK_SIZE
 
 class strfile(StringIO):
     """I don't like the looks of StringIO and prefer
@@ -61,6 +53,26 @@ def get_file_info(fullpath):
     mtime = str(st.st_mtime)
     return dict(user=user, group=group, mode=mode, mtime=mtime)
 
+def set_file_info(filename, info, verbose=False):
+    owner = '%s:%s' % (info['user'], info['group'])
+    if verbose:
+        print "Owner is", owner
+    subprocess.check_call(['chown', owner, filename])
+    mode = info['mode']
+    # I don't like using eval here, so we will
+    # try to filter out bad values
+    if len(mode) <= 7 and mode.isdigit():
+        if verbose:
+            print "Mode is", mode
+        mode = eval(mode)
+    else:
+        raise RuntimeError , "Bad mode value, %s" % mode
+    os.chmod(filename, mode)
+    mtime = int(info['mtime'])
+    if verbose:
+        print "Mtime is", mtime
+    os.utime(filename, (mtime, mtime))
+    
 def copyfile(src, dest):
     file(dest, 'w').writelines(file(src))
 
